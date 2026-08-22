@@ -529,8 +529,8 @@ class TitleState extends MusicBeatState
 				case 2:
 					createCoolText(['FNFMM By:'], 40);
 				case 4:
-					addMoreText('Rayzen,Guh,Ytalo', 40);
-					addMoreText('W e mais uma cacetada de gente', 40);
+					addMoreText('Rayzen,Guh,Ytalo,W', 40);
+					addMoreText('mais uma cacetada de gente', 40);
 				case 5:
 					deleteCoolText();
 				case 6:
@@ -548,15 +548,13 @@ class TitleState extends MusicBeatState
 				case 13:
 					deleteCoolText();
 				case 14:
-					addMoreText('Friday');
+					addMoreText('FNF');
 				case 15:
-					addMoreText('Night');
+					addMoreText('Mic');
 				case 16:
-					addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
-			    case 17:
-					addMoreText('Mic Mayhem V2'); // credTextShit.text += '\nFunkin';
+					addMoreText('Mayhem V2'); // credTextShit.text += '\nFunkin'
 
-				case 17:
+				case 16:
 					skipIntro();
 			}
 		}
