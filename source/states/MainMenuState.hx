@@ -16,12 +16,18 @@ class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '1.0.4'; // This is also used for Discord RPC
 	public static var curSelected:Int = 0;
-	public static var curColumn:MainMenuColumn = RIGHT;
+	public static var curColumn:MainMenuColumn = CENTER;
 	var allowMouse:Bool = true; //Turn this off to block mouse movement in menus
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var leftItem:FlxSprite;
 	var rightItem:FlxSprite;
+	var menuCharacter:FlxSprite;
+
+	// Personagens do menu principal
+	// Coloque os PNGs em: assets/images/mainmenu/characters/
+	var characterFolder:String = 'mainmenu/characters/';
+	var characterHeight:Int = 650;
 
 	//Centered/Text options
 	var optionShit:Array<String> = [
@@ -31,7 +37,7 @@ class MainMenuState extends MusicBeatState
 		'credits'
 	];
 
-	var leftOption:String = #if ACHIEVEMENTS_ALLOWED 'achievements' #else null #end;
+	var leftOption:String = null; // Achievements removido do menu
 	var rightOption:String = 'options';
 
 	var magenta:FlxSprite;
@@ -77,13 +83,20 @@ class MainMenuState extends MusicBeatState
 		add(magenta);
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
+
+		// Personagem que aparece no lado direito
+		menuCharacter = new FlxSprite();
+		menuCharacter.antialiasing = ClientPrefs.data.antialiasing;
+		menuCharacter.scrollFactor.set();
+		menuCharacter.visible = false;
+		add(menuCharacter);
 		add(menuItems);
 
 		for (num => option in optionShit)
 		{
 			var item:FlxSprite = createMenuItem(option, 0, (num * 140) + 90);
 			item.y += (4 - optionShit.length) * 70; // Offsets for when you have anything other than 4 items
-			item.screenCenter(X);
+			item.x = 80; // Menu principal no lado esquerdo
 		}
 
 		if (leftOption != null)
@@ -351,6 +364,43 @@ class MainMenuState extends MusicBeatState
 		super.update(elapsed);
 	}
 
+	function updateMenuCharacter()
+	{
+		if (menuCharacter == null) return;
+
+		var characterName:String = '';
+		switch(curColumn)
+		{
+			case CENTER:
+				characterName = optionShit[curSelected];
+			case RIGHT:
+				characterName = rightOption;
+			case LEFT:
+				characterName = '';
+		}
+
+		if (characterName == null || characterName == '')
+		{
+			menuCharacter.visible = false;
+			return;
+		}
+
+		try
+		{
+			menuCharacter.loadGraphic(Paths.image(characterFolder + characterName));
+			menuCharacter.setGraphicSize(0, characterHeight);
+			menuCharacter.updateHitbox();
+			menuCharacter.x = FlxG.width - menuCharacter.width - 100;
+			menuCharacter.y = FlxG.height - menuCharacter.height - 35;
+			menuCharacter.visible = true;
+		}
+		catch (e:Dynamic)
+		{
+			// Se o PNG não existir, o menu continua funcionando normalmente.
+			menuCharacter.visible = false;
+		}
+	}
+
 	function changeItem(change:Int = 0)
 	{
 		if(change != 0) curColumn = CENTER;
@@ -376,5 +426,6 @@ class MainMenuState extends MusicBeatState
 		selectedItem.animation.play('selected');
 		selectedItem.centerOffsets();
 		camFollow.y = selectedItem.getGraphicMidpoint().y;
+		updateMenuCharacter();
 	}
 }
