@@ -553,8 +553,6 @@ class TitleState extends MusicBeatState
 					addMoreText('Mic');
 				case 16:
 					addMoreText('Mayhem V2'); // credTextShit.text += '\nFunkin'
-
-				case 16:
 					skipIntro();
 			}
 		}
